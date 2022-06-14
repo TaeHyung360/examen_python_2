@@ -160,15 +160,57 @@ def read_data():
 
 def get_name_description(clave,diccionario):
 
+   print("Para la clave: ", clave)
+
    nombre = ""
 
    descripcion = ""
 
-   return nombre, descripcion
+   for i in diccionario:
+
+      if(i == clave):
+
+         descripcion = diccionario[i].get("description")
+
+         nombre = diccionario[i].get("name")
+
+   if nombre == "" and descripcion == "":
+
+      raise IndexError("No existe")
+
+   return nombre,descripcion
+
+def search_by_long(long,diccionario):
+
+   clave = ""
+   
+   for i in diccionario:
+
+      if(str(long) == diccionario[i].get("description")):
+
+         clave = diccionario[i]
+
+   print(clave)
+
+   return clave
 
 if __name__ == "__main__":
 
    #read_data("stops.csv","stops_data.csv")
    diccionario = read_data()
 
-   get_name_description('1096',diccionario)
+   try:
+   
+      nombre,descripcion = get_name_description('1096',diccionario)
+
+      print("----------------------------------------------")
+      print(nombre)
+      print(descripcion)
+      print("----------------------------------------------")
+
+   except IndexError:
+
+        print("Ha saltado un error")
+   
+
+   search_by_long(728257.03,diccionario)
