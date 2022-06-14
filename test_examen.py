@@ -1,21 +1,7 @@
-import cProfile
-from pydoc import describe
+from main import *
+import pytest
 
-class Stop:
-
-    def __init__(self,id,name,description,lat,lon):
-        self.id = id
-        self.nombre = name
-        self.descripcion = description
-        self.latitud = lat
-        self.longitd = lon
-    
-    def to_string(self):
-      print(self.id,self.nombre,self.descripcion,self.latitud,self.longitd)
-
-def read_data():
-
-   diccionario = {
+diccionario = {
     '1020': {'description': 'PSEG ALAMEDA 14 (DAVANT JARDÍ VIA CENTRAL) - VALÈNCIA',
              'id': '1020',
              'lat': '4372694.493',
@@ -168,145 +154,24 @@ def read_data():
              'name': 'Ramon Llull - Bernat Fenollar'}
    }
 
-   return diccionario
+def test_get_name_description():
 
-def get_name_description(clave,diccionario):
+    nombre,descripcion = get_name_description('1096',diccionario)
 
-   print("Para la clave: ", clave)
+    assert nombre == "Ramon Llull - Bernat Fenollar"
 
-   nombre = ""
+    assert descripcion == "C RAMON LLULL 31 (DAVANT) - VALÈNCIA"
 
-   descripcion = ""
+    with pytest.raises(RuntimeError) as exc:
+        get_name_description('1',diccionario).exception(True)
+    assert "No existe" == str(exc.value)
 
-   for i in diccionario:
+def test_search_by_long():
 
-      if(i == clave):
+    clave = search_by_long(728257.03,diccionario)
 
-         descripcion = diccionario[i].get("description")
+    assert clave == "1096"
 
-         nombre = diccionario[i].get("name")
-
-   if nombre == "" and descripcion == "":
-
-      raise IndexError("No existe")
-
-   return nombre,descripcion
-
-def search_by_long(long,diccionario):
-
-   print("Para la longitud: ",long)
-
-   clave = ""
-
-   if(type(long) == float):
-
-      for i in diccionario:
-
-         if(str(long) == diccionario[i].get("lon")):
-
-            clave = i
-      
-      if clave == "":
-         raise IndexError("No existe")
-
-   else:
-
-      raise IndexError("Longitud no es de tipo float")
-
-   return clave
-
-def get_min(k,d):
-
-   print("Para el valor: ", k)
-
-   lista_resultado = []
-
-   for i in d:
-
-      if i < k:
-
-         descripcion = d[i].get("description")
-
-         nombre = d[i].get("name")
-
-         d_temp = {}
-
-         d_temp.update({"description":descripcion})
-
-         d_temp.update({"name":nombre})
-
-         lista_resultado.append(d_temp)
-
-   if len(lista_resultado) == 0:
-
-      raise IndexError("No hay elementos")
-   
-   return lista_resultado
-
-def convert_to_objet(clave,d):
-
-   print("Para la clave: ", clave)
-
-   id = ""
-
-   nombre = ""
-
-   descripcion = ""
-
-   lat = ""
-
-   lon = ""
-
-   for i in d:
-
-      if(i == clave):
-
-         id = d[i].get("id")
-
-         nombre = d[i].get("name")
-
-         descripcion = d[i].get("description")
-
-         lat = d[i].get("lat")
-
-         lon = d[i].get("lon")
-
-   s = Stop(id,nombre,descripcion,lat,lon) 
-
-   return(s)
-
-
-if __name__ == "__main__":
-
-   #read_data("stops.csv","stops_data.csv")
-   diccionario = read_data()
-
-   try:
-   
-      nombre,descripcion = get_name_description('1096',diccionario)
-
-      print("----------------------------------------------")
-      print(nombre)
-      print(descripcion)
-      print("----------------------------------------------")
-
-   except IndexError:
-
-      print("Ha saltado un error")
-
-   clave = search_by_long(728257.03,diccionario)
-
-   print("----------------------------------------------")
-   print(clave)
-   print("----------------------------------------------")
-
-   lista = get_min('1023',diccionario)
-
-   print("----------------------------------------------")
-   print(lista)
-   print("----------------------------------------------")
-
-   clase = convert_to_objet('1096',diccionario)
-   print("Resultado de la clase: ")
-   clase.to_string()
-
+    with pytest.raises(RuntimeError) as exc:
+        search_by_long(0,diccionario).exception(True)
+    assert "Longitud no es de tipo float" == str(exc.value)
