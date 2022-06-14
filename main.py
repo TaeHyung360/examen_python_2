@@ -1,3 +1,4 @@
+import cProfile
 from pydoc import describe
 
 
@@ -182,17 +183,43 @@ def get_name_description(clave,diccionario):
 
 def search_by_long(long,diccionario):
 
+   print("Para la longitud: ",long)
+
    clave = ""
-   
-   for i in diccionario:
 
-      if(str(long) == diccionario[i].get("description")):
+   if(type(long) == float):
 
-         clave = diccionario[i]
+      for i in diccionario:
 
-   print(clave)
+         if(str(long) == diccionario[i].get("lon")):
+
+            clave = i
+      
+      if clave == "":
+         raise IndexError("No existe")
+
+   else:
+
+      raise IndexError("Longitud no es de tipo float")
 
    return clave
+
+def get_min(k,d):
+
+   lista_resultado = []
+
+   for i in d:
+
+      if i < k:
+
+         descripcion = d[i].get("description")
+
+         nombre = d[i].get("name")
+
+         d_temp = {}
+
+         d_temp.update{"name":nombre}
+
 
 if __name__ == "__main__":
 
@@ -210,7 +237,11 @@ if __name__ == "__main__":
 
    except IndexError:
 
-        print("Ha saltado un error")
-   
+      print("Ha saltado un error")
 
-   search_by_long(728257.03,diccionario)
+   clave = search_by_long(728257.03,diccionario)
+
+   print("----------------------------------------------")
+   print(clave)
+   print("----------------------------------------------")
+   
