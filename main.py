@@ -1,6 +1,17 @@
 import cProfile
 from pydoc import describe
 
+class Stop:
+
+    def __init__(self,id,name,description,lat,lon):
+        self.id = id
+        self.nombre = name
+        self.descripcion = description
+        self.latitud = lat
+        self.longitd = lon
+    
+    def to_string(self):
+      print(self.id,self.nombre,self.descripcion,self.latitud,self.longitd)
 
 def read_data():
 
@@ -206,6 +217,8 @@ def search_by_long(long,diccionario):
 
 def get_min(k,d):
 
+   print("Para el valor: ", k)
+
    lista_resultado = []
 
    for i in d:
@@ -218,7 +231,49 @@ def get_min(k,d):
 
          d_temp = {}
 
-         d_temp.update{"name":nombre}
+         d_temp.update({"description":descripcion})
+
+         d_temp.update({"name":nombre})
+
+         lista_resultado.append(d_temp)
+
+   if len(lista_resultado) == 0:
+
+      raise IndexError("No hay elementos")
+   
+   return lista_resultado
+
+def convert_to_objet(clave,d):
+
+   print("Para la clave: ", clave)
+
+   id = ""
+
+   nombre = ""
+
+   descripcion = ""
+
+   lat = ""
+
+   lon = ""
+
+   for i in d:
+
+      print(i)
+
+      if(i == clave):
+
+         id = d[i].get("id")
+
+         nombre = d[i].get("name")
+
+         descripcion = d[i].get("description")
+
+         lat = d[i].get("lat")
+
+         lon = d[i].get("lon")
+   
+    
 
 
 if __name__ == "__main__":
@@ -244,4 +299,12 @@ if __name__ == "__main__":
    print("----------------------------------------------")
    print(clave)
    print("----------------------------------------------")
-   
+
+   lista = get_min('1023',diccionario)
+
+   print("----------------------------------------------")
+   print(lista)
+   print("----------------------------------------------")
+
+   convert_to_objet('1096',diccionario)
+
